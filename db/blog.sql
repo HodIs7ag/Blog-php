@@ -1,0 +1,62 @@
+CREATE DATABASE Blog;
+
+USE Blog;
+
+CREATE TABLE users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(255) NOT NULL UNIQUE,
+    Password VARCHAR(255),
+    Bio TEXT
+    
+);
+
+CREATE TABLE categories (
+    CategoryID INT PRIMARY KEY AUTO_INCREMENT,
+    CategoryName VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE posts (
+    PostID INT PRIMARY KEY AUTO_INCREMENT,
+    UserID INT NOT NULL,
+    Title VARCHAR(255) NOT NULL,
+    Content TEXT NOT NULL,
+    CategoryID INT NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (CategoryID) REFERENCES categories (CategoryID) ON DELETE NO ACTION,
+    FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE
+);
+
+CREATE TABLE tags (
+    TagID INT PRIMARY KEY AUTO_INCREMENT,
+    TagName VARCHAR(50) NOT NULL
+);
+
+
+
+CREATE TABLE post_tags (
+    PostID INT,
+    TagID INT,
+    PRIMARY KEY (PostID, TagID),
+    FOREIGN KEY (PostID) REFERENCES posts (PostID) ON DELETE CASCADE,
+    FOREIGN KEY (TagID) REFERENCES tags (TagID) ON DELETE NO ACTION
+);
+
+
+
+CREATE TABLE comments (
+    CommentID INT PRIMARY KEY AUTO_INCREMENT,
+    PostID INT NOT NULL,
+    UserID INT,
+    Content TEXT NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (PostID) REFERENCES posts (PostID) ON DELETE CASCADE,
+    FOREIGN KEY (UserID) REFERENCES users (UserID) ON DELETE CASCADE
+);
+
+
+-- insert categories
+INSERT INTO categories (CategoryName) VALUES ('Technology'), ('Travel'), ('Politics'), ('Economy'), ('Health'), ('Sports'), ('Entertainment'), ('Fashion'), ('Food'), ('Education');
